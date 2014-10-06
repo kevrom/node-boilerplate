@@ -13,7 +13,7 @@ var sass         = require('gulp-sass');
 var minifyCss    = require('gulp-minify-css');
 var minifyHtml   = require('gulp-minify-html');
 var sourcemaps   = require('gulp-sourcemaps');
-var rimraf       = require('gulp-rimraf');
+var del          = require('del');
 var runSequence  = require('run-sequence');
 var Notification = require('node-notifier');
 var notifier     = new Notification();
@@ -31,20 +31,27 @@ var paths = {
 	fonts: './public/fonts/**/*'
 };
 
+var options = {};
+options.sass = {
+	trace: true,
+	quiet: true,
+	includePaths: [
+		'./public/sass',
+		'./node_modules/bootstrap-sass/assets/stylesheets',
+		'./node_modules/font-awesome/scss'
+	]
+};
 
 // Clean up build directory
 gulp.task('clean', function() {
-	return gulp.src(paths.build, { read: false })
-		.pipe(rimraf());
+	return del(paths.build);
 });
 
 
 // SASS compilation
 gulp.task('styles', function() {
 	return gulp.src(paths.sass)
-		.pipe(sass({
-			style: 'expanded'
-		}))
+		.pipe(sass(options.sass))
 		.pipe(gulp.dest(paths.build + '/css'));
 });
 
@@ -87,22 +94,31 @@ gulp.task('fonts', function() {
 gulp.task('vendor', function() {
 	var bootstrap   = {};
 	var fontawesome = {};
+	var angular = {};
 	var jquery, socketio;
 
-	bootstrap.sass = gulp.src('./node_modules/bootstrap-sass/assets/stylesheets/bootstrap/bootstrap.scss')
-		.pipe(sass({ style: 'expanded' }))
+	bootstrap.sass = gulp.src('./public/lib/bootstrap.scss')
+		.pipe(sass(options.sass))
 		.pipe(gulp.dest(paths.build + '/vendor/bootstrap'));
 
 	bootstrap.js = gulp.src('./node_modules/bootstrap-sass/assets/javascripts/bootstrap.js')
 		.pipe(gulp.dest(paths.build + '/vendor/bootstrap'));
 
-	fontawesome.sass = gulp.src('./public/sass/font-awesome.scss')
-		.pipe(sass({ style: 'expanded' }))
-		.pipe(minifyCss())
+	fontawesome.sass = gulp.src('./public/lib/font-awesome.scss')
+		.pipe(sass(options.sass))
 		.pipe(gulp.dest(paths.build + '/vendor/font-awesome'));
 
 	fontawesome.fonts = gulp.src('./node_modules/font-awesome/fonts/*')
 		.pipe(gulp.dest(paths.build + '/vendor/font-awesome'));
+
+	angular.js = gulp.src('./node_modules/angular/lib/*')
+		.pipe(gulp.dest(paths.build + '/vendor/angular'));
+
+	angular.restangular = gulp.src('./node_modules/restangular/dist/*')
+		.pipe(gulp.dest(paths.build + '/vendor/angular'));
+
+	angular.uirouter = gulp.src('./node_modules/angular-ui-router/release/*')
+		.pipe(gulp.dest(paths.build + '/vendor/angular'));
 
 	jquery = gulp.src('./node_modules/jquery/dist/jquery.js')
 		.pipe(gulp.dest(paths.build + '/vendor/jquery'));
@@ -110,7 +126,17 @@ gulp.task('vendor', function() {
 	socketio = gulp.src('./node_modules/socket.io-client/socket.io.js')
 		.pipe(gulp.dest(paths.build + '/vendor/socket.io'));
 
-	return merge(bootstrap.sass, bootstrap.js, fontawesome.sass, fontawesome.fonts, jquery, socketio);
+	return merge(
+		bootstrap.sass,
+		bootstrap.js,
+		fontawesome.sass,
+		fontawesome.fonts,
+		angular.js,
+		angular.restangular,
+		angular.uirouter,
+		jquery,
+		socketio
+	);
 });
 
 
@@ -118,7 +144,8 @@ gulp.task('vendor', function() {
 // Watch function
 gulp.task('watch', function() {
 	gulp.watch(paths.sass, ['styles']);
-	gulp.watch(paths.js.all, ['lint']);
+	gulp.watch(paths.js.public, ['lint', 'scripts']);
+	gulp.watch(paths.img, ['images']);
 });
 
 
@@ -129,7 +156,7 @@ gulp.task('develop', function() {
 		ext: 'js'
 	})
 	.on('start', ['watch'])
-	.on('change', ['watch'])
+	.on('change', ['lint', 'watch'])
 	.on('restart', function() {
 		notifier.notify({
 			message: 'Development server started.'
