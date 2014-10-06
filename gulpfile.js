@@ -1,6 +1,7 @@
 'use strict';
 
 var gulp         = require('gulp');
+var gutil        = require('gulp-util');
 var transform    = require('vinyl-transform');
 var browserify   = require('browserify');
 var merge        = require('merge-stream');
@@ -52,6 +53,7 @@ gulp.task('clean', function() {
 gulp.task('styles', function() {
 	return gulp.src(paths.sass)
 		.pipe(sass(options.sass))
+		.on('error', gutil.log)
 		.pipe(gulp.dest(paths.build + '/css'));
 });
 
@@ -152,8 +154,7 @@ gulp.task('watch', function() {
 // Dev server
 gulp.task('develop', function() {
 	nodemon({
-		script: 'app.js',
-		ext: 'js'
+		script: 'app.js'
 	})
 	.on('start', ['watch'])
 	.on('change', ['lint', 'watch'])
