@@ -44,8 +44,11 @@ options.sass = {
 };
 
 // Clean up build directory
-gulp.task('clean', function() {
-	return del(paths.build);
+gulp.task('clean', function(cb) {
+	del(paths.build, function(err) {
+		if (err) { cb(err); }
+		cb();
+	});
 });
 
 
@@ -153,8 +156,14 @@ gulp.task('watch', function() {
 
 // Dev server
 gulp.task('develop', function() {
-	nodemon({
-		script: 'app.js'
+	return nodemon({
+		script: 'app.js',
+		ignore: [
+			'.git/*',
+			'node_modules/*',
+			'public/*',
+			'dist/*'
+		]
 	})
 	.on('start', ['watch'])
 	.on('change', ['lint', 'watch'])
@@ -165,22 +174,7 @@ gulp.task('develop', function() {
 	});
 });
 
-gulp.task('build', function() {
-	runSequence(
-		// clean build directory
-		'clean',
-
-		// run these in parallel
-		[
-			'lint',
-			'scripts',
-			'styles',
-			'images',
-			'vendor'
-		]);
-});
-
-gulp.task('default', function() {
+gulp.task('build', function(cb) {
 	runSequence(
 		// clean build directory
 		'clean',
@@ -193,7 +187,16 @@ gulp.task('default', function() {
 			'images',
 			'vendor'
 		],
+		function(err) {
+			if (err) { cb(err); }
+			cb();
+		}
+	);
+});
 
+gulp.task('default', function() {
+	runSequence(
+		'build',
 		// start dev server
 		'develop'
 	);
