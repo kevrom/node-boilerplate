@@ -8,6 +8,7 @@ var config    = require('./server/config/config');
 var app       = express();
 var server    = require('http').Server(app);
 var io        = require('socket.io')(server);
+var chalk     = require('chalk');
 
 // App configuration
 app.config = config;
@@ -39,7 +40,13 @@ server
 			return console.trace(err);
 		}
 
-		console.log("\n✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
+		console.log(
+			chalk.white('\n✔ Express server:'),
+			chalk.blue(config.server.url),
+			chalk.white('in'),
+			chalk.magenta(app.get('env')),
+			chalk.white('mode.')
+		);
 
 	})
 	.on('error', function (err) {

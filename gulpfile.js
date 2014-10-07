@@ -34,13 +34,7 @@ var paths = {
 
 var options = {};
 options.sass = {
-	trace: true,
-	quiet: true,
-	includePaths: [
-		'./public/sass',
-		'./node_modules/bootstrap-sass/assets/stylesheets',
-		'./node_modules/font-awesome/scss'
-	]
+	errLogToConsole: true
 };
 
 // Clean up build directory
@@ -55,8 +49,9 @@ gulp.task('clean', function(cb) {
 // SASS compilation
 gulp.task('styles', function() {
 	return gulp.src(paths.sass)
+		.pipe(sourcemaps.init())
 		.pipe(sass(options.sass))
-		.on('error', gutil.log)
+		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest(paths.build + '/css'));
 });
 
@@ -103,14 +98,18 @@ gulp.task('vendor', function() {
 	var jquery, socketio;
 
 	bootstrap.sass = gulp.src('./public/lib/bootstrap.scss')
+		.pipe(sourcemaps.init())
 		.pipe(sass(options.sass))
+		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest(paths.build + '/vendor/bootstrap'));
 
 	bootstrap.js = gulp.src('./node_modules/bootstrap-sass/assets/javascripts/bootstrap.js')
 		.pipe(gulp.dest(paths.build + '/vendor/bootstrap'));
 
 	fontawesome.sass = gulp.src('./public/lib/font-awesome.scss')
+		.pipe(sourcemaps.init())
 		.pipe(sass(options.sass))
+		.pipe(sourcemaps.write('./'))
 		.pipe(gulp.dest(paths.build + '/vendor/font-awesome'));
 
 	fontawesome.fonts = gulp.src('./node_modules/font-awesome/fonts/*')
@@ -158,7 +157,10 @@ gulp.task('watch', function() {
 gulp.task('develop', function() {
 	return nodemon({
 		script: 'app.js',
+		verboase: true,
 		ignore: [
+			'README.md',
+			'gulpfile.js',
 			'.git/*',
 			'node_modules/*',
 			'public/*',
