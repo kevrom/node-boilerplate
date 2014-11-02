@@ -28,7 +28,11 @@ node_modules
 bower_components
 
 # Configuration files
-server/config/config.js
+settings.json
+settings.local.json
+settings.dev.json
+settings.production.json
+settings.test.json
 
 # Temporary VIM files
 [._]*.s[a-w][a-z]

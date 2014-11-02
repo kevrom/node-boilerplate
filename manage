@@ -7,14 +7,27 @@
 'use strict';
 
 var program = require('commander');
-var pkg = require('../package.json');
+var pkg     = require('./package.json');
+//var db      = require('./core/database')
 
 program
 	.version(pkg.version)
-	.command('add <email> <password>', 'add a new user')
-	.command('edit <email>', 'edit an existing user')
-	.command('remove <email>', 'remove a user')
-	.command('list', 'list all users')
-	.command('role <email>', 'manage user roles')
-	.parse(process.argv);
+
+program
+	.command('sync')
+	.description('sync database')
+	.action(function() {
+		//require('./server/models')
+			//.sequelize
+			//.sync()
+			//.complete(function(err) {
+				//if (err) {
+					//throw err[0];
+				//}
+			//});
+		console.log('sync me bitch');
+	});
+
+
+program.parse(process.argv);
 

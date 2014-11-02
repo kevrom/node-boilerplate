@@ -1,14 +1,20 @@
 'use strict';
 
-var Route           = require('express').Router();
-var config          = require('../config/config');
-var Auth            = require(config.root + '/server/middleware/auth');
-var indexController = require(config.root + '/server/controllers');
+var path = require('path');
+var Router = require('express').Router();
+//var Auth = require(config.root + '/server/middleware/auth');
 
-Route.get('/', indexController.index);
+function register(app) {
+	var indexController = require(path.join(app.root, app.config.get('paths.server'), 'controllers'));
+
+	Router.get('/', indexController.index);
+
+	return Router;
+}
+
 
 // User routes
-Route.use(require('./user'));
+//Route.use(require('./user'));
 
 
-module.exports = Route;
+module.exports.register = register;

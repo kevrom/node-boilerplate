@@ -6,7 +6,7 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation')
 				span.icon-bar
 				span.icon-bar
 				span.icon-bar
-			a.navbar-brand(href='#') My Braaaand!
+			a.navbar-brand(href='#')= app.name
 
 		div#bs-navbar-collapse.collapse.navbar-collapse
 			ul.nav.navbar-nav
@@ -16,7 +16,7 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation')
 					a(href='#') Link 2
 
 			//- Check to see if no user or any Auth strategies are used.  If so, display the Signup/Login buttons
-			if (!User && config.localAuth || config.googleAuth || config.facebookAuth || config.twitterAuth)
+			if (!User && auth.local || auth.google || auth.facebook || auth.twitter)
 				ul.nav.navbar-nav.navbar-right
 					li
 						a(href='#') Sign Up
@@ -27,7 +27,7 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation')
 						ul.dropdown-menu(role='menu')
 
 							//- Check for local Auth
-							if config.localAuth
+							if auth.local
 								li#login-form
 									form(role='form', action='/login', method='post')
 										.form-group.form-group-lg
@@ -45,23 +45,23 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation')
 												button.btn.btn-default(type='submit') Sign In
 
 								//- Check for the other Auth strategies since they are separate from local Auth
-								if (config.googleAuth || config.facebookAuth || config.twitterAuth)
+								if (auth.google || auth.facebook || auth.twitter)
 									li.divider
 
 							//- Google Auth
-							if config.googleAuth
+							if auth.google
 								li
 									a(href='#')
 										img(src='img/google.png', alt='Login with Google')
 
 							//- Facebook Auth
-							if config.facebookAuth
+							if auth.facebook
 								li
 									a(href='#')
 										img(src='img/facebook.png', alt='Login with Facebook')
 
 							//- Twitter Auth
-							if config.twitterAuth
+							if auth.twitter
 								li
 									a(href='#')
 										img(src='img/twitter.png', alt='Login with Twitter')
