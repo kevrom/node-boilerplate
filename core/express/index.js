@@ -136,12 +136,13 @@ function getServer() {
 	return _server;
 }
 
-function run(app) {
+function init(app) {
 	_app = app;
 	_app.servers.express = exports;
 	_server = express();
 	_configure();
 }
 
+// Public API
 module.exports.getServer = getServer;
-module.exports.run       = run;
+module.exports.init      = init;

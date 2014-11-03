@@ -1,7 +1,9 @@
 'use strict';
 
-var convict = require('convict');
-var pkg     = require('../../package.json');
+var convict  = require('convict');
+var path     = require('path');
+var pkg      = require('../../package.json');
+var confFile = require('../../settings.json');
 
 var conf = convict({
 	app: {
@@ -114,8 +116,8 @@ var conf = convict({
 	database: {
 		engine: {
 			doc: "Database engine to use for application",
-			default: "pg",
-			format: ['pg'],
+			default: "postgres",
+			format: ['postgres'],
 			env: "DATABASE_ENGINE"
 		},
 		table: {
@@ -225,8 +227,7 @@ var conf = convict({
 
 
 // load environment dependent configuration
-
-conf.loadFile('../settings.json');
+conf.load(confFile);
 
 conf.validate();
 

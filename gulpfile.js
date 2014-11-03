@@ -156,8 +156,8 @@ gulp.task('watch', function() {
 // Dev server
 gulp.task('develop', function() {
 	return nodemon({
-		script: 'app.js',
-		verboase: true,
+		script: 'server/index.js',
+		verbose: true,
 		ignore: [
 			'README.md',
 			'gulpfile.js',

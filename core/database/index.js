@@ -4,36 +4,58 @@ var fs        = require('fs');
 var path      = require('path');
 var Sequelize = require('sequelize');
 var _         = require('lodash');
-var config    = require('../config/config');
-var sequelize = new Sequelize(config.database.name, config.database.username, config.database.password, {
-	dialect: 'postgres',
-	logging: false,
-	define: {
-		syncOnAssociation: true,
-		timestamps: true
-	}
-});
-var db        = {};
 
-// Load all models in the models directory
-fs
-	.readdirSync(__dirname)
-	.filter(function(file) {
-		return (file.indexOf('.') !== 0) && (file !== 'index.js');
-	})
-	.forEach(function(file) {
-		var model = sequelize.import(path.join(__dirname, file));
-		db[model.name] = model;
+var sequelize = null;
+var models    = {};
+var modelsDir;
+
+function _configure() {
+
+	// Load all models in the models directory
+	fs
+		.readdirSync(modelsDir)
+		.forEach(function(file) {
+			var model = sequelize.import(path.join(modelsDir, file));
+			models[model.name] = model;
+		});
+
+	// Execute associations for models
+	Object.keys(models).forEach(function(modelName) {
+		if ('associate' in models[modelName]) {
+			models[modelName].associate(models);
+		}
 	});
 
-// Execute associations for models
-Object.keys(db).forEach(function(modelName) {
-	if ('associate' in db[modelName]) {
-		db[modelName].associate(db);
-	}
-});
+}
 
-module.exports = _.extend({
-	sequelize: sequelize,
-	Sequelize: Sequelize
-}, db);
+function getModels(model) {
+	if (!model) {
+		return models;
+	}
+	return models[model];
+}
+
+function init(app) {
+	modelsDir = path.join(app.root, app.config.get('paths.server'), 'models');
+	sequelize = new Sequelize(
+		app.config.get('database.table'),
+		app.config.get('database.username'),
+		app.config.get('database.password'),
+		{
+			dialect: app.config.get('database.engine'),
+			logging: false,
+			define: {
+				syncOnAssociation: true,
+				timestamps: true
+			}
+		}
+	);
+
+	_configure();
+}
+
+// Public API
+module.exports.init      = init;
+module.exports.getModels = getModels;
+module.exports.sequelize = sequelize;
+module.exports.Sequelize = Sequelize;

@@ -18,18 +18,16 @@ var app = {
 // Passport settings
 //require('./server/config/passport')(app, passport);
 
-// Express settings
-//require('./server/config/express')(app, express, passport);
-
 // Socket.IO
 //require('./server/socket')(io);
 
 
 app.run = function() {
-	require('./core/express').run(app);
-	require('./core/http').run(app);
+	require('./core/express').init(app);
+	require('./core/http').init(app);
+	require('./core/database').init(app);
 
 	app.servers.express.getServer().use(routes.register(app));
-}
+};
 
 module.exports = app;
