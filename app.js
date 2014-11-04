@@ -13,8 +13,6 @@ var app = {
 };
 
 
-// Database initialization
-
 // Passport settings
 //require('./server/config/passport')(app, passport);
 
@@ -23,8 +21,14 @@ var app = {
 
 
 app.run = function() {
+
+	// Initialize Express middleware
 	require('./core/express').init(app);
+
+	// Initialize HTTP server
 	require('./core/http').init(app);
+
+	// Initialize Sequelize/Database
 	require('./core/database').init(app);
 
 	app.servers.express.getServer().use(routes.register(app));

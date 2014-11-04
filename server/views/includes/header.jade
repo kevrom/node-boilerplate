@@ -30,7 +30,7 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation')
 							if auth.local
 								li#login-form
 									form(role='form', action='/login', method='post')
-										.form-group.form-group-lg
+										.form-group.form-group
 											.input-group
 												span.input-group-addon
 													i.fa.fa-user
@@ -52,19 +52,19 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation')
 							if auth.google
 								li
 									a(href='#')
-										img(src='img/google.png', alt='Login with Google')
+										img(src='/img/google.png', alt='Login with Google')
 
 							//- Facebook Auth
 							if auth.facebook
 								li
 									a(href='#')
-										img(src='img/facebook.png', alt='Login with Facebook')
+										img(src='/img/facebook.png', alt='Login with Facebook')
 
 							//- Twitter Auth
 							if auth.twitter
 								li
 									a(href='#')
-										img(src='img/twitter.png', alt='Login with Twitter')
+										img(src='/img/twitter.png', alt='Login with Twitter')
 
 			//- If User is logged in
 			if User

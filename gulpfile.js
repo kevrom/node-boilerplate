@@ -156,16 +156,9 @@ gulp.task('watch', function() {
 // Dev server
 gulp.task('develop', function() {
 	return nodemon({
-		script: 'server/index.js',
-		verbose: true,
-		ignore: [
-			'README.md',
-			'gulpfile.js',
-			'.git/*',
-			'node_modules/*',
-			'public/*',
-			'dist/*'
-		]
+		script: './core/index.js',
+		//verbose: true,
+		ignore: ['node_modules/*', 'git', 'public/*', 'dist/*']
 	})
 	.on('start', ['watch'])
 	.on('change', ['lint', 'watch'])

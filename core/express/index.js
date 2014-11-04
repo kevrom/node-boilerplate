@@ -65,7 +65,7 @@ function _configure() {
 		//maxAge: new Date(Date.now() + 86400000)
 	//}));
 
-	_server.use(express.static(_app.config.get('paths.dist')));
+	_server.use(express.static(path.join(_app.root, paths.dist)));
 	_server.use(function (req, res, next) {
 		res.locals.NODE_ENV        = env;
 		res.locals.auth            = {};
