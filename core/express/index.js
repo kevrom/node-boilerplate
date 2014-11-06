@@ -32,7 +32,7 @@ function _configure() {
 	var paths = _app.config.get('paths');
 
 	_server
-		.set('views', path.join(_app.root, paths.server, 'views'))
+		.set('views', path.join(_app.root, paths.server, 'templates'))
 		.set('view engine', 'jade')
 		.enable('trust proxy')
 		.disable('x-powered-by');
@@ -86,6 +86,7 @@ function _configure() {
 
 	_server.use(flash());
 
+
 	// development error handler
 	// will print stacktrace
 	if (env === 'development') {
@@ -111,6 +112,8 @@ function _configure() {
 		}));
 	}
 
+	_server.use(require('../../server/routes')(_app));
+
 	// error handlers
 
 	// 404
@@ -130,6 +133,7 @@ function _configure() {
 			error: {}
 		});
 	});
+
 }
 
 function getServer() {

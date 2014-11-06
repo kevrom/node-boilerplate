@@ -1,17 +1,19 @@
 'use strict';
 
 // Module dependencies
-var path   = require('path');
-var config = require('./core/config');
-var routes = require('./server/routes');
-
+var path     = require('path');
+var config   = require('./core/config');
+var passport = require('passport');
 
 var app = {
 	root: __dirname,
 	config: config,
-	servers: {}
+	servers: {},
+	middleware: {},
+	passport: passport
 };
 
+app.middleware.Auth = require('./core/middleware/auth');
 
 // Passport settings
 //require('./server/config/passport')(app, passport);
@@ -29,9 +31,7 @@ app.run = function() {
 	require('./core/http').init(app);
 
 	// Initialize Sequelize/Database
-	require('./core/database').init(app);
-
-	app.servers.express.getServer().use(routes.register(app));
+	//require('./core/database').init(app);
 };
 
 module.exports = app;

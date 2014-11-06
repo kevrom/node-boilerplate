@@ -4,7 +4,7 @@ var IndexController = {};
 
 IndexController.index = function(req, res) {
 	res.render('index', {
-		title: 'Express 4'
+		title: 'Index'
 	});
 };
 
