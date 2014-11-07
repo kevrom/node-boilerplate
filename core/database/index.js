@@ -2,47 +2,23 @@
 
 var fs        = require('fs');
 var path      = require('path');
+var glob      = require('glob');
 var Sequelize = require('sequelize');
 var _         = require('lodash');
 
-var sequelize = null;
-var models    = {};
-var modelsDir;
+var _app = null;
+var _sequelize = null;
+var _models    = {};
+var _modelsDir;
 
 function _configure() {
-
-	// Load all models in the models directory
-	fs
-		.readdirSync(modelsDir)
-		.forEach(function(file) {
-			var model = sequelize.import(path.join(modelsDir, file));
-			models[model.name] = model;
-		});
-
-	// Execute associations for models
-	Object.keys(models).forEach(function(modelName) {
-		if ('associate' in models[modelName]) {
-			models[modelName].associate(models);
-		}
-	});
-
-}
-
-function getModels(model) {
-	if (!model) {
-		return models;
-	}
-	return models[model];
-}
-
-function init(app) {
-	modelsDir = path.join(app.root, app.config.get('paths.server'), 'models');
-	sequelize = new Sequelize(
-		app.config.get('database.table'),
-		app.config.get('database.username'),
-		app.config.get('database.password'),
+	_modelsDir = path.join(_app.root, _app.config.get('paths.server'));
+	_sequelize = new Sequelize(
+		_app.config.get('database.table'),
+		_app.config.get('database.username'),
+		_app.config.get('database.password'),
 		{
-			dialect: app.config.get('database.engine'),
+			dialect: _app.config.get('database.engine'),
 			logging: false,
 			define: {
 				syncOnAssociation: true,
@@ -51,11 +27,30 @@ function init(app) {
 		}
 	);
 
+	// Load all models in the models directory
+	glob
+		.sync(_modelsDir + '/**/models/*.js')
+		.forEach(function(file) {
+			var model = _sequelize.import(file);
+			_models[model.name] = model;
+		});
+
+	// Execute associations for models
+	Object.keys(_models).forEach(function(modelName) {
+		if ('associate' in _models[modelName]) {
+			_models[modelName].associate(_models);
+		}
+	});
+
+}
+
+function init(app) {
+	_app = app;
 	_configure();
+	_app.models = _models;
+	_app.sequelize = _sequelize;
+	_app.Sequelize = Sequelize;
 }
 
 // Public API
 module.exports.init      = init;
-module.exports.getModels = getModels;
-module.exports.sequelize = sequelize;
-module.exports.Sequelize = Sequelize;
