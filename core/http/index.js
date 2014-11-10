@@ -46,4 +46,4 @@ function init(app) {
 
 // Public API
 module.exports.getServer = getServer;
-module.exports.init      = init;
+module.exports           = init;

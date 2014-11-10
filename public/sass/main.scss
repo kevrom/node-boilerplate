@@ -1,3 +1,14 @@
+@import "./variables";
+
+html, body {
+	height: 100%;
+}
+
+#page {
+	min-height: 100%;
+	margin: 0 auto (-$footer-height);
+}
+
 #login-form {
 	width: 300px;
 	padding: 15px 15px 0px 15px;
@@ -11,4 +22,13 @@
 	i {
 		width: 13px;
 	}
+}
+
+footer {
+	color: $copyright-color;
+	background-color: $copyright-bg;
+}
+
+footer, .push {
+	height: $footer-height;
 }

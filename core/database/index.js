@@ -53,4 +53,4 @@ function init(app) {
 }
 
 // Public API
-module.exports.init      = init;
+module.exports = init;

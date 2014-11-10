@@ -7,8 +7,9 @@
 'use strict';
 
 var program = require('commander');
+var app     = require('./app');
+var db      = require('./core/database')(app);
 var pkg     = require('./package.json');
-//var db      = require('./core/database')
 
 program
 	.version(pkg.version)

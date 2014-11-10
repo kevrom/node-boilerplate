@@ -10,7 +10,9 @@ UserController.index = function(req, res) {
 
 UserController.login = {
 	get: function(req, res) {
-		res.render(t('login'), {});
+		res.render(t('login'), {
+			title: 'Login'
+		});
 	},
 	post: function(req, res) {
 		// req.session.returnTo is set in Auth middleware

@@ -38,13 +38,13 @@ app.middleware.Auth = require('./core/middleware/auth');
 app.run = function() {
 
 	// Initialize Express middleware
-	require('./core/express').init(app);
+	require('./core/express')(app);
 
 	// Initialize HTTP server
-	require('./core/http').init(app);
+	require('./core/http')(app);
 
 	// Initialize Sequelize/Database
-	require('./core/database').init(app);
+	require('./core/database')(app);
 
 };
 
