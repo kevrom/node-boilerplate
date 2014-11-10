@@ -50,6 +50,7 @@ function init(app) {
 	_app.models = _models;
 	_app.sequelize = _sequelize;
 	_app.Sequelize = Sequelize;
+	return _models;
 }
 
 // Public API

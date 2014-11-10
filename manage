@@ -8,8 +8,9 @@
 
 var program = require('commander');
 var app     = require('./app');
-var db      = require('./core/database')(app);
+var db      = require('./core/database')(app);  // load the db into app object
 var pkg     = require('./package.json');
+var chalk   = require('chalk');
 
 program
 	.version(pkg.version)
@@ -18,15 +19,16 @@ program
 	.command('sync')
 	.description('sync database')
 	.action(function() {
-		//require('./server/models')
-			//.sequelize
-			//.sync()
-			//.complete(function(err) {
-				//if (err) {
-					//throw err[0];
-				//}
-			//});
-		console.log('sync me bitch');
+		console.log(chalk.blue('Syncing database...'))
+		app
+			.sequelize
+			.sync()
+			.complete(function(err) {
+				if (err) {
+					return console.log(chalk.red('Database sync failed with ' + err));
+				}
+				console.log(chalk.blue('Database synced with no errors.'))
+			});
 	});
 
 

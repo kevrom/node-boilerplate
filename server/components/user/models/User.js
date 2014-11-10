@@ -43,7 +43,11 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.BOOLEAN
 		}
 	}, {
-		classMethods: {},
+		classMethods: {
+			associate: function(models) {
+				User.hasOne(models.UserProfile);
+			}
+		},
 		instanceMethods: {
 			authenticate: function(plainText, cb) {
 				bcrypt.compare(plainText, this.hashed_password, function(err, res) {
@@ -85,6 +89,16 @@ module.exports = function(sequelize, DataTypes) {
 					}
 				}
 				throw new Error('Role not found');
+			}
+		},
+		hooks: {
+			afterCreate: function(user, fn) {
+				this.associations.UserProfile.target.create()
+					.success(function(profile) {
+						profile.setUser(user);
+						user.setUserProfile(profile);
+					});
+				fn(null, user);
 			}
 		}
 	});

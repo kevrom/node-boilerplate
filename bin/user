@@ -7,17 +7,146 @@
 'use strict';
 
 var program = require('commander');
-var pkg = require('../package.json');
+var app     = require('../app');
+var db      = require('../core/database')(app);  // load the db into the app object
+var pkg     = require('../package.json');
+var chalk   = require('chalk');
+var Table   = require('cli-table');
+var User    = db.User;
 
 program
 	.version(pkg.version)
-	.command('add <email> <password>', 'add a new user')
-	.command('edit <email>', 'edit an existing user')
-	.command('remove <email>', 'remove a user')
-	.command('list', 'list all users')
-	.command('role <email>', 'manage user roles')
-	.parse(process.argv);
+
+program
+	.command('add <email> <password>')
+	.description('add a new user')
+	.action(function() {
+		User
+			.build({
+				email: program.args[0]
+			})
+			.hashPassword(program.args[1])
+			.save()
+			.success(function(user) {
+				console.log(chalk.blue('Successfully created user \'' + user.email + '\''));
+			})
+			.error(function(err) {
+				console.error(chalk.red(err));
+			});
+	});
+
+
+program
+	.command('edit <email>')
+	.description('edit an existing user')
+	.action(function() {
+
+	});
+
+program
+	.command('remove <email>')
+	.description('remove a user')
+	.action(function() {
+		User
+			.destroy({
+				email: program.args[0]
+			})
+			.success(function(user) {
+				console.log(chalk.blue('User \'' + program.args[0] + '\' deleted.'));
+			})
+			.error(function(err) {
+				console.error(chalk.red(err));
+			});
+	});
+
+program
+	.command('list')
+	.description('list all users')
+	.action(function() {
+		User
+			.findAll()
+			.success(function(users) {
+				var table = new Table({
+					head: ['Email', 'Name', 'Roles'],
+					colWidths: [30, 30, 30]
+				});
+
+				var i;
+				var email, name, roles;
+				for (i=0; i<users.length; i++) {
+					email = users[i].email;
+					name = users[i].name || '';
+					roles = (users[i].roles) ? users[i].roles.join(', ') : '';
+					table.push([email, name, roles]);
+				}
+
+				console.log(table.toString());
+			})
+			.error(function(err) {
+				console.error(err);
+			});
+	});
+
+program
+	.command('role <email>')
+	.description('manage user roles')
+	.action(function() {
+		User
+			.find({
+				where: {
+					email: program.args[0]
+				}
+			})
+			.success(function(user) {
+				if (program.list) {
+					console.log(user.getRoles());
+				}
+				if (program.add) {
+					if (!user.roles) {
+						user.roles = [];
+					}
+
+					try {
+						user.addRole(program.add);
+					}
+					catch (err) {
+						return console.error(chalk.red(err));
+					}
+
+					user
+						.save()
+						.success(function(user) {
+							console.log(chalk.blue('Successfully added \'' + program.add + '\' to ' + user.email + '\'s roles'));
+						})
+						.error(function(err) {
+							console.error(chalk.red(err));
+						});
+				}
+				if (program.remove) {
+					try {
+						user.removeRole(program.remove);
+					}
+					catch (err) {
+						return console.error(chalk.red(err));
+					}
+
+					user
+						.save()
+						.success(function(user) {
+							console.log(chalk.blue('Successfully removed \'' + program.remove + '\' from ' + user.email + '\'s roles'));
+						})
+						.error(function(err) {
+							console.error(chalk.red(err));
+						});
+				}
+			})
+			.error(function(err) {
+				console.error(chalk.red(err));
+			});
+	});
+
+program.parse(process.argv);
 
 if (!program.args.length) {
-	console.log('This is a CLI tool for manipulating users in the database.');
+	console.log('This is a CLI tool for manipulating users in the database. Use the --help flag to more information.');
 }
