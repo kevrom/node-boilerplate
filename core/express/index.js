@@ -84,8 +84,22 @@ function _configure() {
 		next();
 	});
 
+	/*
+	 * res.cRender() searches for the template in the component templates directory
+	 * it requires the syntax res.cRender('component/view', locals, cb);
+	 */
+	_server.use(function(req, res, next) {
+		res.cRender = function(view, locals, cb) {
+			var viewArr = view.split('/');
+			var tpl = path.join(_app.root, paths.server, 'components', viewArr[0], 'templates', viewArr[1]); 
+			return res.render(tpl, locals, cb);
+		};
+		next();
+	});
+
 	_server.use(flash());
 
+	_server.use(require(path.join(_app.root, paths.server, 'routes'))(_app));
 
 	// development error handler
 	// will print stacktrace
@@ -110,29 +124,30 @@ function _configure() {
 			},
 			level: 9
 		}));
+
+		// error handlers
+
+		// 404
+		_server.use(function(req, res, next) {
+			var err = new Error('Not Found');
+			res.status(404).render('404', {
+				url: req.protocol + '://' + req.headers.host + req.originalUrl,
+				error: 'Page not found!'
+			});
+		});
+
+		// 500
+		_server.use(function(err, req, res, next) {
+			res.status(err.status || 500);
+			res.render('500', {
+				message: err.message,
+				error: {}
+			});
+		});
+
 	}
 
-	_server.use(require('../../server/routes')(_app));
 
-	// error handlers
-
-	// 404
-	_server.use(function(req, res, next) {
-		var err = new Error('Not Found');
-		res.status(404).render('404', {
-			url: req.protocol + '://' + req.headers.host + req.originalUrl,
-			error: 'Page not found!'
-		});
-	});
-
-	// 500
-	_server.use(function(err, req, res, next) {
-		res.status(err.status || 500);
-		res.render('500', {
-			message: err.message,
-			error: {}
-		});
-	});
 
 }
 

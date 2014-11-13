@@ -10,7 +10,7 @@ UserController.index = function(req, res) {
 
 UserController.login = {
 	get: function(req, res) {
-		res.render(t('login'), {
+		res.cRender('user/login', {
 			title: 'Login'
 		});
 	},

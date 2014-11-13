@@ -48,4 +48,8 @@ app.run = function() {
 
 };
 
+global.getApp = function() {
+	return app;
+};
+
 module.exports = app;
