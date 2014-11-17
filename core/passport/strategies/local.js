@@ -1,9 +1,13 @@
 'use strict';
 
 var LocalStrategy = require('passport-local').Strategy;
-var User          = require('../../models').User;
 
-module.exports = function(passport) {
+var _app = null;
+
+function _configure() {
+	var passport = _app.passport;
+	var User = _app.models.User;
+
 	passport.serializeUser(function(user, done) {
 		done(null, user.id);
 	});
@@ -46,4 +50,11 @@ module.exports = function(passport) {
 				//return done(null, false, { message: 'User does not exist.' });
 			});
 	}));
-};
+}
+
+function init(app) {
+	_app = app;
+	_configure();
+}
+
+module.exports = init;

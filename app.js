@@ -46,6 +46,9 @@ app.run = function() {
 	// Initialize Sequelize/Database
 	require('./core/database')(app);
 
+	// Initialize Passport
+	require('./core/passport')(app);
+
 };
 
 global.getApp = function() {

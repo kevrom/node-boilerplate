@@ -2,10 +2,9 @@
 
 var path           = require('path');
 var UserController = {};
-function t(tpl) { return path.join(__dirname, 'templates', tpl); }  // helper function to target templates for this component
 
 UserController.index = function(req, res) {
-	res.render(t('index'), {});
+	res.cRender('user/index', {});
 };
 
 UserController.login = {
@@ -24,7 +23,7 @@ UserController.login = {
 
 UserController.register = {
 	get: function(req, res) {
-		res.render(t('register'), {});
+		res.cRender('user/register', {});
 	},
 	post: function(req, res) {
 		console.log('registerpost');

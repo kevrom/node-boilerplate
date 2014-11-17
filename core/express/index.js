@@ -59,11 +59,10 @@ function _configure() {
 		store: new RedisStore()
 	}));
 
-	// use passport session
-	//app.use(passport.initialize());
-	//app.use(passport.session({
-		//maxAge: new Date(Date.now() + 86400000)
-	//}));
+	_server.use(_app.passport.initialize());
+	_server.use(_app.passport.session({
+		maxAge: new Date(Date.now() + 86400000)
+	}));
 
 	_server.use(express.static(path.join(_app.root, paths.dist)));
 	_server.use(function (req, res, next) {
