@@ -3,6 +3,7 @@
 var fs        = require('fs');
 var path      = require('path');
 var glob      = require('glob');
+var chalk     = require('chalk');
 var Sequelize = require('sequelize');
 var _         = require('lodash');
 
@@ -31,8 +32,12 @@ function _configure() {
 	glob
 		.sync(_modelsDir + '/**/models/*.js')
 		.forEach(function(file) {
-			var model = _sequelize.import(file);
-			_models[model.name] = model;
+			try {
+				var model = _sequelize.import(file);
+				_models[model.name] = model;
+			} catch (e) {
+				console.log(chalk.red('Unable to load model: %s'), file);
+			}
 		});
 
 	// Execute associations for models

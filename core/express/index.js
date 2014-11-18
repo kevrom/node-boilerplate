@@ -7,6 +7,7 @@ var responseTime   = require('response-time');
 var methodOverride = require('method-override');
 var multer         = require('multer');
 var compression    = require('compression');
+var cors           = require('cors');
 var favicon        = require('serve-favicon');
 var bodyParser     = require('body-parser');
 var cookieParser   = require('cookie-parser');
@@ -18,13 +19,6 @@ var _              = require('lodash');
 
 var _app = null;
 var _server = null;
-
-var allowCrossDomain = function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header('Access-Control-Allow-Credentials', true);
-	res.header("Access-Control-Allow-Headers", "X-Requested-With");
-	next();
-};
 
 function _configure() {
 	var env   = _app.config.get('server.env');
@@ -48,7 +42,7 @@ function _configure() {
 		.use(methodOverride());
 
 	if (_app.config.get('server.allowCrossDomain')) {
-		_server.use(allowCrossDomain);
+		_server.use(cors());
 	}
 
 	_server.use(cookieParser(_app.config.get('app.secret')));

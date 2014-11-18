@@ -47,7 +47,6 @@ function _configure() {
 			.error(function(err) {
 				console.error(err);
 				return done(err);
-				//return done(null, false, { message: 'User does not exist.' });
 			});
 	}));
 }

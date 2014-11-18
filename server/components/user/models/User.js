@@ -33,19 +33,22 @@ module.exports = function(sequelize, DataTypes) {
 				isEmail: true
 			}
 		},
-		provider: {
-			type: DataTypes.STRING
-		},
 		roles: {
 			type: DataTypes.ARRAY(DataTypes.STRING)
 		},
 		isActive: {
-			type: DataTypes.BOOLEAN
+			type: DataTypes.BOOLEAN,
+			defaultValue: true
+		},
+		verified: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false
 		}
 	}, {
 		classMethods: {
 			associate: function(models) {
 				User.hasOne(models.UserProfile);
+				User.hasMany(models.UserProvider);
 			}
 		},
 		instanceMethods: {

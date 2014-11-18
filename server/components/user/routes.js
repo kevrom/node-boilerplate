@@ -7,7 +7,8 @@ var UserController = require('./controllers.js');
 var _app = null;
 
 function _configure() {
-	var Auth = _app.middleware.Auth;
+	var Auth     = _app.middleware.Auth;
+	var passport = _app.passport;
 
 	// Local Authentication
 	if (_app.config.get('auth.local.enabled')) {
@@ -27,9 +28,9 @@ function _configure() {
 	// Twitter Authentication
 	if (_app.config.get('auth.twitter.enabled')) {
 		Router
-			.get('/auth/twitter', _app.passport.authenticate('twitter'))
+			.get('/auth/twitter', passport.authenticate('twitter'))
 			.get('/auth/twitter/callback',
-				_app.passport.authenticate('twitter',
+				passport.authenticate('twitter',
 				{ failureRedirect: '/login' }),
 				function(req, res) {
 					res.redirect(req.session.returnTo || '/');
@@ -40,9 +41,9 @@ function _configure() {
 	// Facebook Authentication
 	if (_app.config.get('auth.facebook.enabled')) {
 		Router
-			.get('/auth/facebook', _app.passport.authenticate('facebook', { scope: ['email', 'user_location'] }))
+			.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }))
 			.get('/auth/facebook/callback',
-				_app.passport.authenticate('facebook',
+				passport.authenticate('facebook',
 				{ failureRedirect: '/login' }),
 				function(req, res) {
 					res.redirect(req.session.returnTo || '/');
@@ -52,7 +53,14 @@ function _configure() {
 
 	// Google Authentication
 	if (_app.config.get('auth.google.enabled')) {
-		console.log('blah');
+		Router
+			.get('/auth/google', passport.authenticate('google', { scope: ['email']}))
+			.get('/auth/google/callback',
+				passport.authenticate('google',
+				{ failureRedirect: '/login' }),
+				function(req, res) {
+					res.redirect(req.session.returnTo || '/');
+				});
 	}
 
 }
