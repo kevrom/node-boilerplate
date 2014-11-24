@@ -57,11 +57,10 @@ module.exports = function(sequelize, DataTypes) {
 					return cb(err, res);
 				});
 			},
-			hashPassword: function(plainText, cb) {
+			hashPassword: function(plainText) {
 				var salt = bcrypt.genSaltSync(10);
 				var hash = bcrypt.hashSync(plainText, salt);
-				this.hashed_password = hash;
-				return this;
+				return hash;
 			},
 			getRoles: function() {
 				return this.roles;
@@ -102,6 +101,17 @@ module.exports = function(sequelize, DataTypes) {
 						user.setUserProfile(profile);
 					});
 				fn(null, user);
+			}
+		},
+		setterMethods: {
+			password: function(password) {
+				this._plainText = password;
+				this.hashed_password = this.hashPassword(password);
+			}
+		},
+		getterMethods: {
+			password: function() {
+				return this._plainText;
 			}
 		}
 	});

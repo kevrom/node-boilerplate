@@ -22,11 +22,10 @@ program
 	.description('add a new user')
 	.action(function() {
 		User
-			.build({
-				email: program.args[0]
+			.create({
+				email: program.args[0],
+				password: program.args[1]
 			})
-			.hashPassword(program.args[1])
-			.save()
 			.success(function(user) {
 				console.log(chalk.blue('Successfully created user \'' + user.email + '\''));
 			})

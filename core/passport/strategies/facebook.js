@@ -17,6 +17,15 @@ function _configure() {
 	passport.use(new FacebookStrategy(facebookConfig, function(req, accessToken, refreshToken, profile, done) {
 		console.log(profile);
 		if (req.user) { console.log(req.user); }
+
+		User.findOrCreate({
+			email: profile.emails[0].value
+		}, {
+			name: profile.displayName,
+			verified: true
+		});
+
+
 		//if (req.user) {
 			//User.findOne({ $or: [
 					//{ 'facebook.id' : profile.id },

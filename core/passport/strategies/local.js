@@ -8,22 +8,6 @@ function _configure() {
 	var passport = _app.passport;
 	var User = _app.models.User;
 
-	passport.serializeUser(function(user, done) {
-		done(null, user.id);
-	});
-
-	passport.deserializeUser(function(id, done) {
-		User
-			.find({ where: { id: id }})
-			.success(function(user) {
-				done(null, user);
-			})
-			.error(function(err) {
-				console.log('Error deserializing user');
-				done(err, null);
-			});
-	});
-
 	passport.use(new LocalStrategy({
 		usernameField: 'email',
 		passwordField: 'password',

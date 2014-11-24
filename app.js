@@ -11,6 +11,7 @@ var passport = require('passport');
  * @param {Object} [app.servers] Access the servers currently running e.g. http, express, socketio
  * @param {Object} [app.middleware] Access the various middleware available
  * @param {Object} [app.models] Access the models loaded automatically from component models directories
+ * @param {Object} [app.utils] Access to various helpful utilities
  * @param {Object} [app.passport] Access the base passport object
  * @param {Object} [app.sequelize] Access the sequelize database object
  * @param {Object} [app.Sequelize] Access the base sequelize objects
@@ -21,19 +22,14 @@ var app = {
 	servers: {},
 	middleware: {},
 	models: {},
+	utils: {},
 	passport: passport,
 	sequelize: null,
 	Sequelize: null
 };
 
 app.middleware.Auth = require('./core/middleware/auth');
-
-// Passport settings
-//require('./server/config/passport')(app, passport);
-
-// Socket.IO
-//require('./server/socket')(io);
-
+app.utils.Emailer   = require('./core/utils/emailer');
 
 app.run = function() {
 
@@ -49,10 +45,6 @@ app.run = function() {
 	// Initialize Passport
 	require('./core/passport')(app);
 
-};
-
-global.getApp = function() {
-	return app;
 };
 
 module.exports = app;

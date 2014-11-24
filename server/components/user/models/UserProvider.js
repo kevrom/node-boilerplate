@@ -1,4 +1,5 @@
-/* UserProvider stores information for a User that logs in with a third-party
+/*
+ * UserProvider stores information for a User that logs in with a third-party
  * provider such as Facebook, Twitter, or Google
  */
 'use strict';
