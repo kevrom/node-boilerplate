@@ -1,9 +1,17 @@
 'use strict';
 
+
 var convict  = require('convict');
 var path     = require('path');
+var cjson    = require('cjson');
+var chalk    = require('chalk');
 var pkg      = require('../../package.json');
-var confFile = require('../../settings.json');
+
+try {
+	var confFile = cjson.load(path.dirname(module.filename), '../../settings.json');
+} catch (e) {
+	console.log(chalk.red('Please create a "settings.json" file in the root directory of your application.'));
+}
 
 var conf = convict({
 	app: {
@@ -118,22 +126,22 @@ var conf = convict({
 			doc: "Database engine to use for application",
 			default: "postgres",
 			format: ['postgres'],
-			env: "DATABASE_ENGINE"
+			env: "DB_ENGINE"
 		},
 		table: {
 			doc: "Name of database table",
 			default: pkg.name,
-			env: "DATABASE_TABLE"
+			env: "DB_TABLE"
 		},
 		username: {
 			doc: "Username for database",
 			default: "",
-			env: "DATABASE_USERNAME"
+			env: "DB_USERNAME"
 		},
 		password: {
 			doc: "Password for database",
 			default: "",
-			env: "DATABASE_PASSWORD"
+			env: "DB_PASSWORD"
 		}
 	},
 	auth: {
@@ -229,6 +237,11 @@ var conf = convict({
 // load environment dependent configuration
 conf.load(confFile);
 
-conf.validate();
+try {
+	conf.validate();
+} catch (e) {
+	console.log(chalk.red(e));
+	process.exit(0);
+}
 
 module.exports = conf;

@@ -1,0 +1,154 @@
+{
+	"app": {
+		// name of app, env variable APP_NAME
+		// "name": "",
+
+		// description of app
+		// "description": "",
+
+		// comma-delimited list of keywords
+		// "keywords": "",
+
+		// author of the project
+		// "author": "",
+
+		// app secret, generate one with "./manage secret"
+		// "secret": ""
+	},
+
+	"paths": {
+		// public directory default is "public"
+		"public": "public",
+
+		// server directory default is "server"
+		"server": "server",
+
+		// upload directory default is "upload"
+		"upload": "media",
+
+		// test directory default is "test"
+		"test": "test",
+
+		// temporary directory default is "temp"
+		"temp": ".tmp",
+
+		// log directory default is "log"
+		"log": "log",
+
+		// distribution directory default is "dist"
+		"dist": "dist"
+	},
+
+	"server": {
+		// development or production, env var is NODE_ENV
+		"env": "development",
+
+		// ip address to access this app, env var is IP_ADDRESS
+		"ip": "127.0.0.1",
+
+		// port to bind app to, env var is PORT
+		"port": "8080",
+
+		// enable CORS
+		"allowCrossDomain": "false"
+	},
+
+	"email": {
+		// name to sign emails with, env var is EMAIL_NAME
+		"name": "",
+
+		// email address to send from, env var is EMAIL_ADDRESS
+		"address": "",
+
+		// which email service to use, e.g. gmail, mailgun, env var is EMAIL_SERVICE
+		"service": "gmail",
+
+		// email username, env var is EMAIL_USERNAME
+		"username": "",
+
+		// email password, env var is EMAIL_PASSWORD
+		"password": ""
+	},
+
+	"database": {
+		// engine to use for db, env var is DB_ENGINE
+		// valid value is currently only "postgres"
+		"engine": "postgres",
+
+		// name of db table, env var is DB_TABLE
+		"table": "",
+
+		// username for db, env var is DB_USERNAME
+		"username": "",
+
+		// password for db, env var is DB_PASSWORD
+		"password": ""
+	},
+
+	"auth": {
+		/*
+			Local Auth enables routes to login, logout, sign up, reset passwords, etc.
+		*/
+		"local": {
+			// enable local auth
+			"enabled": false
+		},
+
+		/*
+			Twitter Auth enables access to Twitter's OAuth 1.1 API
+			Please visit https://apps.twitter.com/ to set up an application to
+			utilize this feature.
+		*/
+		"twitter": {
+			// enable Twitter auth
+			"enabled": false,
+
+			// env var is TWITTER_KEY
+			// "consumerKey": "",
+
+			// env var is TWITTER_SECRET
+			// "consumerSecret": "",
+
+			// callback URL to send to Twitter
+			"callbackURL": "/auth/twitter/callback"
+		},
+
+		/*
+			Facebook Auth enables access to Facebook's OAuth 2.0 API
+			Please visit https://developers.facebook.com/ to set up an application
+			to utilize this feature.
+		*/
+		"facebook": {
+			// enable Facebook auth
+			"enabled": false,
+
+			// env var is FACEBOOK_CLIENT
+			// "clientID": "",
+
+			// env var is FACEBOOK_SECRET
+			// "clientSecret": "",
+
+			// callback URL to send to Facebook
+			"callbackURL": "/auth/facebook/callback"
+		},
+
+		/*
+			Google Auth enables access to Google's OAuth 2.0 API
+			Please visit https://console.developers.google.com to set up an
+			application to utilize this feature.
+		*/
+		"google": {
+			// enable Google auth
+			"enabled": false,
+
+			// env var is GOOGLE_ID
+			// "clientID": "",
+
+			// env var is GOOGLE_SECRET
+			// "clientSecret": "",
+
+			// callback URL to send to Google
+			"callbackURL": "/auth/google/callback"
+		}
+	}
+}
