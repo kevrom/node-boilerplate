@@ -20,7 +20,7 @@ program
 	.action(function() {
 		console.log(chalk.blue('Syncing database...'));
 		var app = require('./app');
-		require('./core/database')(app);  // load the db into app object
+		require('./core/database')(app);
 		app
 			.sequelize
 			.sync()
