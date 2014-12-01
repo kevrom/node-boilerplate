@@ -1,17 +1,9 @@
 'use strict';
 
-
 var convict  = require('convict');
 var path     = require('path');
-var cjson    = require('cjson');
 var chalk    = require('chalk');
 var pkg      = require('../../package.json');
-
-try {
-	var confFile = cjson.load(path.dirname(module.filename), '../../settings.json');
-} catch (e) {
-	console.log(chalk.red('Please create a "settings.json" file in the root directory of your application.'));
-}
 
 var conf = convict({
 	app: {
@@ -233,14 +225,18 @@ var conf = convict({
 	}
 });
 
-
 // load environment dependent configuration
-conf.load(confFile);
+try {
+	conf.loadFile(path.resolve(path.dirname(module.filename), '../../settings.json'));
+} catch (e) {
+	console.log(chalk.red(e));
+	process.exit(0);
+}
 
 try {
 	conf.validate();
 } catch (e) {
-	console.log(chalk.red(e));
+	console.log(chalk.red('Configuration %s'), e);
 	process.exit(0);
 }
 

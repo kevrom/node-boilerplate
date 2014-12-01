@@ -28,7 +28,18 @@ var app = {
 	Sequelize:  null
 };
 
+/*
+ * app.middleware.Auth
+ * This is an auth handler that exposes some middleware to check various scenarios.
+ * app.middleware.Auth.requiresLogin - Used for routes that require user to be logged in.
+ * app.middleware.Auth.APIrequiresLogin - Used for API routes that require user to be logged in.
+ * app.middleware.Auth.authenticate - Used for local authentication
+ */
 app.middleware.Auth = require('./core/middleware/auth');
+
+/* app.utils.Emailer
+ * This is an object used to build emails.  Refer to the file for documentation
+ */
 app.utils.Emailer   = require('./core/utils/emailer');
 
 app.run = function() {

@@ -7,19 +7,20 @@
 'use strict';
 
 var program = require('commander');
-var app     = require('./app');
-var db      = require('./core/database')(app);  // load the db into app object
+var crypto  = require('crypto');
 var pkg     = require('./package.json');
 var chalk   = require('chalk');
 
 program
-	.version(pkg.version)
+	.version(pkg.version);
 
 program
 	.command('sync')
 	.description('sync database')
 	.action(function() {
-		console.log(chalk.blue('Syncing database...'))
+		console.log(chalk.blue('Syncing database...'));
+		var app = require('./app');
+		require('./core/database')(app);  // load the db into app object
 		app
 			.sequelize
 			.sync()
@@ -27,8 +28,18 @@ program
 				if (err) {
 					return console.log(chalk.red('Database sync failed with ' + err));
 				}
-				console.log(chalk.blue('Database synced with no errors.'))
+				console.log(chalk.blue('Database synced with no errors.'));
 			});
+	});
+
+program
+	.command('secret')
+	.description('generate a secret')
+	.action(function() {
+		console.log(chalk.blue('Generating a secret...'));
+		var secret = crypto.randomBytes(20).toString('hex');
+		console.log(chalk.blue('Please copy and paste this secret into your settings.json file.'));
+		console.log(chalk.white(secret));
 	});
 
 
