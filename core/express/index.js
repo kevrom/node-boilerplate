@@ -78,13 +78,13 @@ function _configure() {
 	});
 
 	/*
-	 * res.cRender() searches for the template in the component templates directory
-	 * it requires the syntax res.cRender('component/view', locals, cb);
-	 */
+	* res.cRender() searches for the template in the component templates directory
+	* it requires the syntax res.cRender('component/view', locals, cb);
+	*/
 	_server.use(function(req, res, next) {
 		res.cRender = function(view, locals, cb) {
 			var viewArr = view.split('/');
-			var tpl = path.join(_app.root, paths.server, 'components', viewArr[0], 'templates', viewArr[1]); 
+			var tpl = path.join(_app.root, paths.server, 'components', viewArr[0], 'templates', viewArr[1]);
 			return res.render(tpl, locals, cb);
 		};
 		next();
