@@ -7,7 +7,9 @@
 'use strict';
 
 var program = require('commander');
+var path    = require('path');
 var crypto  = require('crypto');
+var glob    = require('glob');
 var pkg     = require('./package.json');
 var chalk   = require('chalk');
 
@@ -40,6 +42,26 @@ program
 		var secret = crypto.randomBytes(20).toString('hex');
 		console.log(chalk.blue('Please copy and paste this secret into your settings.json file.'));
 		console.log(chalk.white(secret));
+	});
+
+
+// this feature is not working yet
+program
+	.command('test')
+	.description('run all tests')
+	.action(function() {
+		console.log(chalk.blue('Running all tests...'));
+		var app = require('./app');
+		require('./core/database')(app);
+		app.config.loadFile('./settings.test.json');
+		app.sequelize.sync();
+
+		var tests = glob.sync('server/**/test/*.js');
+		console.log(tests);
+		tests.forEach(function(test) {
+			require(path.join(app.root, test))(app);
+		});
+
 	});
 
 

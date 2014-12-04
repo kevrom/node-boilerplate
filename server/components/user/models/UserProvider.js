@@ -23,9 +23,10 @@ module.exports = function(sequelize, DataTypes) {
 		gender: DataTypes.STRING,
 		profileUrl: DataTypes.STRING
 	}, {
+		paranoid: true,
 		classMethods: {
 			associate: function(models) {
-				UserProvider.hasOne(models.User);
+				UserProvider.belongsTo(models.User);
 			}
 		},
 		instanceMethods: {},

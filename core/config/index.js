@@ -65,7 +65,8 @@ var conf = convict({
 			doc: "The applicaton environment.",
 			format: ["production", "development", "test"],
 			default: "development",
-			env: "NODE_ENV"
+			env: "NODE_ENV",
+			arg: "node-env"
 		},
 		ip: {
 			doc: "The IP address to bind.",
@@ -225,9 +226,10 @@ var conf = convict({
 	}
 });
 
-// load environment dependent configuration
+var settingsFile = 'settings.' + conf.get('server.env') + '.json';
+var settingsPath = path.resolve(path.dirname(module.filename), '../../' + settingsFile);
 try {
-	conf.loadFile(path.resolve(path.dirname(module.filename), '../../settings.json'));
+	conf.loadFile(settingsPath);
 } catch (e) {
 	console.log(chalk.red(e));
 	process.exit(0);

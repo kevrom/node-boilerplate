@@ -25,6 +25,7 @@ module.exports = function(sequelize, DataTypes) {
 			defaultValue: false
 		}
 	}, {
+		paranoid: true,
 		classMethods: {
 			associate: function(models) {
 				UserProfile.hasOne(models.User);

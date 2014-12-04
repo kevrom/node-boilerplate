@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
 			allowNull: true,
 			unique: true
 		},
-		hashed_password: {
+		hashedPassword: {
 			type: DataTypes.STRING
 		},
 		name: {
@@ -45,15 +45,19 @@ module.exports = function(sequelize, DataTypes) {
 			defaultValue: false
 		}
 	}, {
+		paranoid: true,
 		classMethods: {
 			associate: function(models) {
 				User.hasOne(models.UserProfile);
 				User.hasMany(models.UserProvider);
+				User.hasMany(models.Client);
+				User.hasMany(models.AccessToken);
+				User.hasMany(models.RefreshToken);
 			}
 		},
 		instanceMethods: {
 			authenticate: function(plainText, cb) {
-				bcrypt.compare(plainText, this.hashed_password, function(err, res) {
+				bcrypt.compare(plainText, this.hashedPassword, function(err, res) {
 					return cb(err, res);
 				});
 			},
@@ -106,7 +110,7 @@ module.exports = function(sequelize, DataTypes) {
 		setterMethods: {
 			password: function(password) {
 				this._plainText = password;
-				this.hashed_password = this.hashPassword(password);
+				this.hashedPassword = this.hashPassword(password);
 			}
 		},
 		getterMethods: {

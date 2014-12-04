@@ -30,7 +30,7 @@ bower_components
 # Configuration files
 settings.json
 settings.local.json
-settings.dev.json
+settings.development.json
 settings.production.json
 settings.test.json
 
