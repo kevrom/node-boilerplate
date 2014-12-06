@@ -10,8 +10,10 @@ var program = require('commander');
 var path    = require('path');
 var crypto  = require('crypto');
 var glob    = require('glob');
+var Mocha   = require('mocha');
 var pkg     = require('./package.json');
 var chalk   = require('chalk');
+var exec    = require('child_process').exec;
 
 program
 	.version(pkg.version);
@@ -45,7 +47,6 @@ program
 	});
 
 
-// this feature is not working yet
 program
 	.command('test')
 	.description('run all tests')
@@ -56,10 +57,19 @@ program
 		app.config.loadFile('./settings.test.json');
 		app.sequelize.sync();
 
+		var mocha = new Mocha();
+
 		var tests = glob.sync('server/**/test/*.js');
-		console.log(tests);
+		//console.log(tests);
 		tests.forEach(function(test) {
-			require(path.join(app.root, test))(app);
+			var testFile = path.join(app.root, test);
+			mocha.addFile(testFile);
+		});
+
+		mocha.run(function(failures) {
+			process.on('exit', function() {
+				process.exit(failures);
+			});
 		});
 
 	});
