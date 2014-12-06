@@ -25,6 +25,7 @@ function _configure() {
 	var root  = _app.root;
 	var paths = _app.config.get('paths');
 
+
 	_server
 		.set('views', path.join(_app.root, paths.server, 'templates'))
 		.set('view engine', 'jade')
@@ -93,6 +94,10 @@ function _configure() {
 	_server.use(flash());
 
 	_server.use(require(path.join(_app.root, paths.server, 'routes'))(_app));
+
+	if (env === 'development') {
+		require('express-debug')(_server);
+	}
 
 	// development error handler
 	// will print stacktrace

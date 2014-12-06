@@ -16,7 +16,7 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation')
 					a(href='#') Link 2
 
 			//- Check to see if no user or any Auth strategies are used.  If so, display the Signup/Login buttons
-			if (!User && auth.local || auth.google || auth.facebook || auth.twitter)
+			if (!User && (auth.local || auth.google || auth.facebook || auth.twitter))
 				ul.nav.navbar-nav.navbar-right
 					li
 						a(href='#') Sign Up

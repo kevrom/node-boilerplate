@@ -16,8 +16,8 @@ function _configure() {
 	};
 
 	passport.use(new FacebookStrategy(facebookConfig, function(req, accessToken, refreshToken, profile, done) {
-		console.log(profile);
-		if (req.user) { console.log(req.user); }
+		//console.log(profile);
+		//if (req.user) { console.log(req.user); }
 
 		// Find or create the UserProvider associated with the email submitted
 		UserProvider
