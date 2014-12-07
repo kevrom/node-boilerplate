@@ -10,8 +10,7 @@ function _configure() {
 	var googleConfig = {
 		clientID    : _app.config.get('auth.google.clientID'),
 		clientSecret: _app.config.get('auth.google.clientSecret'),
-		callbackURL : _app.config.get('auth.google.callbackURL'),
-		enableProof : false
+		callbackURL : _app.config.get('auth.google.callbackURL')
 	};
 
 	passport.use(new GoogleStrategy(googleConfig, function(req, accessToken, refreshToken, profile, done) {
