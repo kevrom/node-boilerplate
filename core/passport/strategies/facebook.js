@@ -7,7 +7,6 @@ var _app = null;
 function _configure() {
 	var User           = _app.models.User;
 	var UserProvider   = _app.models.UserProvider;
-	var AccessToken    = _app.models.AccessToken;
 	var passport       = _app.passport;
 	var facebookConfig = {
 		clientID    : _app.config.get('auth.facebook.clientID'),
@@ -47,24 +46,6 @@ function _configure() {
 							userProvider.setUser(user);
 						}
 						done(null, user);
-						// Find or create an access token for this user
-						AccessToken
-							.findOrCreate({
-								token: refreshToken.access_token
-							})
-							.success(function(token, created) {
-								if (created) {
-									token
-										.setUser(user)
-										.success(function() {
-											// return the user
-											done(null, user);
-										});
-								}
-							})
-							.error(function(err) {
-								done(err);
-							});
 					})
 					.error(function(err) {
 						done(err);
